@@ -1,0 +1,19 @@
+{
+    "name": "aeris/fn",
+    "description": "Functional utility library",
+    "authors": [
+        {
+            "name": "Edan Schwartz",
+            "email": "edanschwartz@gmail.com"
+        }
+    ],
+    "require": {},
+    "autoload": {
+        "psr-4": {
+            "Aeris\\FnTest\\": "tests/"
+        },
+        "files": [
+            "src/Fn.php"
+        ]
+    }
+}
