@@ -257,6 +257,42 @@ function pick(array $arr /*,$var_keys*/) {
 }
 
 /**
+ * Plucks a property from a collection of associative arrays.
+ *
+ * eg:
+ * 	Fn\pluck([
+ * 			['name' => 'moe', 'age' => 45],
+ * 			['name' => 'larry', 'age' => 55],
+ * 			['name' => 'curly', 'age' => 65]
+ * 		], 'name')
+ * // ['moe', 'larry', 'curly']
+ *
+ * @param array[] $collection
+ * @param string $propName
+ * @return mixed
+ */
+function pluck(array $collection, $propName) {
+	return array_reduce($collection, function($vals, $item) use ($propName) {
+		return isset($item[$propName]) ? concat($vals, $item[$propName]) : $vals;
+	}, []);
+}
+
+/**
+ * Add a value to an array, or merge a set of values.
+ *
+ * Fn\concat(['a', 'b'], 'c');  				// ['a', 'b', 'c']
+ * Fn\concat(['a', 'b'], ['c', 'd']);  	// ['a', 'b', 'c', 'd']
+ *
+ * @param array $arr
+ * @param array|mixed $valOrArray
+ * @return array
+ */
+function concat(array $arr, $valOrArray) {
+	$arrToMerge = is_array($valOrArray) ? $valOrArray : [$valOrArray];
+	return array_merge([], $arr, $arrToMerge);
+}
+
+/**
  * Returns true if any item in the array
  * pass the $test callable.
  *

@@ -107,6 +107,30 @@ Functional utility library for PHP.
 ### pick
 
 
+### pluck
+
+Plucks a property from a collection of associative arrays.
+
+eg:
+
+```php
+	Fn\pluck([
+			['name' => 'moe', 'age' => 45],
+			['name' => 'larry', 'age' => 55],
+			['name' => 'curly', 'age' => 65]
+		], 'name');
+  // --> ['moe', 'larry', 'curly']
+```
+
+### concat
+
+Add a value to an array, or merge a set of values.
+
+```php
+    Fn\concat(['a', 'b'], 'c');  				  // ['a', 'b', 'c']
+    Fn\concat(['a', 'b'], ['c', 'd']);  	// ['a', 'b', 'c', 'd']
+```
+
 ### any
 
 Returns true if any item in the array passes a predicate

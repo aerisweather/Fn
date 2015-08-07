@@ -15,6 +15,7 @@ class FnTest extends \PHPUnit_Framework_TestCase {
 		};
 		$this->assertTrue(Fn\any(['baz', 'shazaam', 'baz'], $isShazaam));
 		$this->assertFalse(Fn\any(['baz', 'baz', 'baz'], $isShazaam));
+		$this->assertFalse(Fn\any([]), $isShazaam);
 	}
 
 	/** @test */
@@ -193,5 +194,48 @@ class FnTest extends \PHPUnit_Framework_TestCase {
 
 		$assertWhenFooBar('foo', 'bar');
 		$this->assertEquals(1, $cbCallCount);
+	}
+
+	/** @test */
+	public function method_concat() {
+		$this->assertEquals(
+			['a', 'b', 'c'],
+			Fn\concat(['a', 'b'], 'c'),
+			'Should add a value to an array'
+		);
+		$this->assertEquals(
+			['a', 'b', 'c', 'd'],
+			Fn\concat(['a', 'b'], ['c', 'd']),
+			'Should merge an array'
+		);
+	}
+
+	/** @test */
+	public function method_pluck() {
+		$this->assertEquals(
+			['moe', 'larry', 'curly'],
+			Fn\pluck([
+				['name' => 'moe', 'age' => 45],
+				['name' => 'larry', 'age' => 55],
+				['name' => 'curly', 'age' => 65]
+			], 'name'),
+			'Should pluck item properties'
+		);
+
+		$this->assertEquals(
+			[45, 55],
+			Fn\pluck([
+				['name' => 'moe', 'age' => 45],
+				['name' => 'larry', 'age' => 55],
+				['name' => 'curly']
+			], 'age'),
+			'Should handle missing properties'
+		);
+
+		$this->assertEquals(
+			[],
+			Fn\pluck([], 'name'),
+			'Should handle empty collections'
+		);
 	}
 }
