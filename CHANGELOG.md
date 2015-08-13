@@ -1,3 +1,7 @@
+# v1.2.0
+
+* ADD: `Fn\find()`
+
 # v1.1.0
 
 * ADD: `Fn\pluck()`, `Fn\concat()`
