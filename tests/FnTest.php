@@ -2,6 +2,7 @@
 
 use Aeris\Fn;
 use Aeris\FnTest\Fixture\SomeClass;
+use Aeris\Spy;
 
 class FnTest extends \PHPUnit_Framework_TestCase {
 
@@ -10,7 +11,7 @@ class FnTest extends \PHPUnit_Framework_TestCase {
 		$this->assertTrue(Fn\any([false, true, false]));
 		$this->assertFalse(Fn\any([false, false, false]));
 
-		$isShazaam = function($arg) {
+		$isShazaam = function ($arg) {
 			return $arg === 'shazaam';
 		};
 		$this->assertTrue(Fn\any(['baz', 'shazaam', 'baz'], $isShazaam));
@@ -43,6 +44,31 @@ class FnTest extends \PHPUnit_Framework_TestCase {
 		$this->assertEquals(['c'], $someClassInstances[2]->ctorArgs);
 	}
 
+	/** @test */
+	public function method_find() {
+		$oneThroughTen = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+		$moreThanFive = Spy::returnsUsing(function ($n) {
+			return $n > 5;
+		});
+
+		$this->assertEquals(6, Fn\find($oneThroughTen, $moreThanFive), 'Should return the first value to pass the predicate');
+
+		// Should only call predicate until value is found (for performance)
+		$moreThanFive->shouldHaveBeenCalled()
+			->times(6);
+
+		$this->assertNull(Fn\find([1, 2, 3], $moreThanFive), 'Should return null if none match.');
+
+		$this->assertNull(Fn\find([], Fn\always()), 'Should return null if collection is empty');
+
+		$spy = Spy::returns(true);
+		$this->assertEquals('bar', Fn\find(['foo' => 'bar'], $spy), 'Should work with associateive arrays');
+
+		// Should call spy with ($val, $key);
+		$spy->shouldHaveBeenCalled()
+			->with('bar', 'foo');
+	}
+
 
 	/** @test */
 	public function method_caller() {
@@ -62,10 +88,14 @@ class FnTest extends \PHPUnit_Framework_TestCase {
 
 	/** @test */
 	public function method_countWhere() {
-		$this->assertEquals(3, Fn\countWhere(['foo', 'bar', 'foo'], true), 'Should return array count, when predicate is true');
+		$this->assertEquals(3, Fn\countWhere([
+			'foo',
+			'bar',
+			'foo'
+		], true), 'Should return array count, when predicate is true');
 		$this->assertEquals(0, Fn\countWhere(['foo', 'bar', 'foo'], false), 'Should return 0, when predicate is false');
 
-		$this->assertEquals(2, Fn\countWhere(['foo', 'bar', 'foo'], function($item) {
+		$this->assertEquals(2, Fn\countWhere(['foo', 'bar', 'foo'], function ($item) {
 			return $item == 'foo';
 		}), 'Should return the count of items passing a predicate fn.');
 	}
@@ -125,10 +155,10 @@ class FnTest extends \PHPUnit_Framework_TestCase {
 		$this->assertTrue($resolve(true));
 		$this->assertFalse($resolve(false));
 
-		$this->assertTrue($resolve(function($a, $b, $c) {
+		$this->assertTrue($resolve(function ($a, $b, $c) {
 			return $a == 'a' && $b == 'b' && $c == 'c';
 		}));
-		$this->assertFalse($resolve(function($a, $b, $c) {
+		$this->assertFalse($resolve(function ($a, $b, $c) {
 			return false;
 		}));
 	}
@@ -167,7 +197,7 @@ class FnTest extends \PHPUnit_Framework_TestCase {
 			'faz' => 'baz'
 		];
 
-		$reduced = Fn\reduceAssoc($arr, function($reduced, $val, $key) {
+		$reduced = Fn\reduceAssoc($arr, function ($reduced, $val, $key) {
 			return $reduced . $key . $val;
 		}, '');
 
@@ -177,10 +207,10 @@ class FnTest extends \PHPUnit_Framework_TestCase {
 	/** @test */
 	public function method_conditional() {
 		$cbCallCount = 0;
-		$isFooBar = function($argA, $argB) {
+		$isFooBar = function ($argA, $argB) {
 			return $argA == 'foo' && $argB == 'bar';
 		};
-		$assertFooBar = function($argA, $argB) use (&$cbCallCount) {
+		$assertFooBar = function ($argA, $argB) use (&$cbCallCount) {
 			$cbCallCount++;
 			$this->assertEquals('foo', $argA);
 			$this->assertEquals('bar', $argB);

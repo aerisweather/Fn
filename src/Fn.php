@@ -371,6 +371,15 @@ function factory($className) {
 	};
 }
 
+function find(array $collection, callable $predicate) {
+	foreach ($collection as $key => $val) {
+		if ($predicate($val, $key)) {
+			return $val;
+		}
+	}
+	return null;
+}
+
 /**
  * eg.
  *  $obj->getFoo = function() { return 'foo' }

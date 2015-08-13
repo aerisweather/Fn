@@ -8,7 +8,9 @@
             "email": "edanschwartz@gmail.com"
         }
     ],
-    "require": {},
+    "require": {
+        "aeris/spy": "^1.1.0"
+    },
     "autoload": {
         "psr-4": {
             "Aeris\\FnTest\\": "tests/"
