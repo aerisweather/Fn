@@ -427,3 +427,16 @@ function reduceAssoc(array $array, $mapper, $init) {
 
 	return $res;
 }
+
+function times($times, callable $cb) {
+	if ($times < 0) {
+		throw new \InvalidArgumentException('Fn\times arg must be at least 0');
+	}
+
+	$runCount = 0;
+
+	while ($runCount < $times) {
+		$cb($runCount);
+		$runCount++;
+	}
+}

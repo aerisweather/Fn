@@ -173,3 +173,17 @@ Fn\all([1, 3, 4, 5, 9], Fn\even()) // false
 
 ### reduceAssoc
 
+
+### times
+
+Invoke a callable some number of times.
+
+```php
+Fn\times(3, function($i) {
+	echo "call #$i";
+})
+
+// call 1
+// call 2
+// call 3
+```

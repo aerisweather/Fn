@@ -268,4 +268,41 @@ class FnTest extends \PHPUnit_Framework_TestCase {
 			'Should handle empty collections'
 		);
 	}
+
+	/** @test */
+	public function method_times_shouldCallAFunctionXNumberOfTimes() {
+		Fn\times(3, $spy = new Spy());
+
+		$spy->shouldHaveBeenCalled()
+			->times(3);
+	}
+
+	/** @test */
+	public function method_times_shouldCallZeroTimes() {
+		Fn\times(0, $spy = new Spy());
+
+		$spy->shouldNotHaveBeenCalled();
+	}
+
+	/** @test */
+	public function method_times_shouldCallWithIndex() {
+		Fn\times(3, $spy = new Spy());
+
+		$spy->shouldHaveBeenCalled()
+			->with(0);
+		$spy->shouldHaveBeenCalled()
+			->with(1);
+		$spy->shouldHaveBeenCalled()
+			->with(2);
+	}
+
+	/**
+	 * @test
+	 * @expectedException \InvalidArgumentException
+	 */
+	public function method_times_shouldHandleNegativeArg() {
+		Fn\times(-1, $spy = new Spy());
+
+		$spy->shouldNotHaveBeenCalled();
+	}
 }
