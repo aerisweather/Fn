@@ -1,3 +1,7 @@
+# v1.3.0
+
+* ADD: `Fn\times()`
+
 # v1.2.0
 
 * ADD: `Fn\find()`
